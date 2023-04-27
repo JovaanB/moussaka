@@ -3,6 +3,7 @@
 namespace App\Artists\Infrastructure\Symfony\Controller;
 
 use App\Artists\Domain\Entity\Song;
+use App\Artists\Domain\Repository\AlbumRepository;
 use App\Artists\Domain\Repository\SongRepository;
 use App\Artists\Infrastructure\Symfony\Form\SongType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,10 +25,16 @@ class SongController extends AbstractController
 
     #[Route('/new', name: 'app_song_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ARTIST')]
-    public function new(Request $request, SongRepository $songRepository): Response
+    public function new(Request $request, SongRepository $songRepository, AlbumRepository $albumRepository): Response
     {
         $song = new Song();
-        $form = $this->createForm(SongType::class, $song);
+        $user = $this->getUser();
+
+        $options = [
+            'user' => $user
+        ];
+
+        $form = $this->createForm(SongType::class, $song, $options);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -54,7 +61,13 @@ class SongController extends AbstractController
     #[IsGranted('ROLE_ARTIST')]
     public function edit(Request $request, Song $song, SongRepository $songRepository): Response
     {
-        $form = $this->createForm(SongType::class, $song);
+        $user = $this->getUser();
+
+        $options = [
+            'user' => $user
+        ];
+
+        $form = $this->createForm(SongType::class, $song, $options);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

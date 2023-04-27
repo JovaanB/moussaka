@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Artists\Domain\Entity;
 
-use App\Customers\Domain\Entity\User;
+use App\Artists\Domain\Repository\AlbumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
@@ -14,8 +14,8 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Symfony\Component\Uid\UuidV4;
 
-#[Entity]
-class Artist
+#[Entity(repositoryClass: AlbumRepository::class)]
+class Album
 {
     #[Id, Column(type: 'string')]
     private string $id;
@@ -23,31 +23,13 @@ class Artist
     #[Column]
     private ?string $name = null;
 
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'artists')]
-    private ?User $user = null;
-
-    #[OneToMany(mappedBy: 'artist', targetEntity: Album::class, cascade: ['persist'])]
-    private Collection $albums;
-
-    /**
-     * @return Collection
-     */
-    public function getAlbums(): Collection
-    {
-        return $this->albums;
-    }
-
-    /**
-     * @param Collection $albums
-     */
-    public function setAlbums(Collection $albums): void
-    {
-        $this->albums = $albums;
-    }
+    #[ManyToOne(targetEntity: Artist::class, inversedBy: 'albums')]
+    private Artist $artist;
 
     /**
      * @var Collection<Song>
      */
+    #[OneToMany(mappedBy: 'album', targetEntity: Song::class, cascade: ['persist'])]
     private Collection $songs;
 
     public function __construct()
@@ -71,14 +53,14 @@ class Artist
         $this->name = $name;
     }
 
-    public function getUser(): User
+    public function getArtist(): Artist
     {
-        return $this->user;
+        return $this->artist;
     }
 
-    public function setUser(User $user): void
+    public function setArtist(Artist $artist): void
     {
-        $this->user = $user;
+        $this->artist = $artist;
     }
 
     public function getSongs(): Collection

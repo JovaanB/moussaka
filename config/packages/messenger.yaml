@@ -20,3 +20,4 @@ framework:
             App\Customers\Application\Message\UserRegistration: sync
             App\Customers\Application\Message\FindUserQuery: sync
             App\Customers\Application\Message\VerifyUserEmail: sync
+            App\Artists\Application\Message\AlbumCreation: sync

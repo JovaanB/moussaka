@@ -2,36 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Artists\Domain\Entity;
+namespace App\Artists\Infrastructure\Symfony\Model;
 
 use App\Customers\Domain\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToMany;
 use Symfony\Component\Uid\UuidV4;
+use App\Artists\Domain\Entity\Artist as DomainArtist;
 
-#[Entity]
 class Artist
 {
-    #[Id, Column(type: 'string')]
     private string $id;
-
-    #[Column]
     private ?string $name = null;
-
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'artists')]
     private ?User $user = null;
-
-    #[OneToMany(mappedBy: 'artist', targetEntity: Album::class, cascade: ['persist'])]
     private Collection $albums;
 
-    /**
-     * @return Collection
-     */
     public function getAlbums(): Collection
     {
         return $this->albums;
@@ -89,5 +74,15 @@ class Artist
     public function setSongs(Collection $songs): void
     {
         $this->songs = $songs;
+    }
+
+    public static function fromDomain(DomainArtist $domainArtist): self
+    {
+        $artist = new self();
+        $artist->id = $domainArtist->getId();
+        $artist->name = $domainArtist->getName();
+        $artist->user = $domainArtist->getUser();
+        $artist->albums = $domainArtist->getAlbums();
+        return $artist;
     }
 }

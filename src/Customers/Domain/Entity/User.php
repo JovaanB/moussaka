@@ -141,6 +141,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @see UserInterface
+     */
     public function getArtists(): Collection
     {
         return $this->artists;
@@ -155,4 +158,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->artists->add($artist);
     }
+
 }

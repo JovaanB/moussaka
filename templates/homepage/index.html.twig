@@ -4,4 +4,7 @@
 
 {% block body %}
     {{ render(controller('App\\Artists\\Infrastructure\\Symfony\\Controller\\SongController::index')) }}
+    {% if is_granted('ROLE_ARTIST') %}
+    {{ render(controller('App\\Artists\\Infrastructure\\Symfony\\Controller\\AlbumController::index')) }}
+    {% endif %}
 {% endblock %}

@@ -3,27 +3,50 @@
 namespace App\Artists\Domain\Entity;
 
 use App\Artists\Domain\Repository\SongRepository;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Component\HttpFoundation\File\File;
 
-#[ORM\Entity(repositoryClass: SongRepository::class)]
+#[Entity(repositoryClass: SongRepository::class)]
 class Song
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[Id]
+    #[GeneratedValue]
+    #[Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column]
+    #[Column]
     private ?int $duration = null;
 
-    #[ORM\Column(length: 255)]
+    #[Column(length: 255)]
     private ?string $filePath = null;
 
     private ?File $file = null;
+
+    #[ManyToOne(targetEntity: Album::class, inversedBy: 'songs')]
+    private ?Album $album;
+
+    /**
+     * @return Album|null
+     */
+    public function getAlbum(): ?Album
+    {
+        return $this->album;
+    }
+
+    /**
+     * @param Album|null $album
+     */
+    public function setAlbum(?Album $album): void
+    {
+        $this->album = $album;
+    }
 
     public function getId(): ?int
     {
