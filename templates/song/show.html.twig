@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ song.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ song.name }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Durée</th>
+                <td>{{ song.duration }} secondes</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_homepage') }}">Accueil</a>
+
+    {% if is_granted('ROLE_ARTIST') %}
+    <a href="{{ path('app_song_edit', {'id': song.id}) }}">modifier</a>
+
+    {{ include('song/_delete_form.html.twig') }}
+    {% endif %}
+{% endblock %}

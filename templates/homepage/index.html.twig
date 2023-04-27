@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue sur Moussaka !{% endblock %}
+
+{% block body %}
+    {{ render(controller('App\\Artists\\Infrastructure\\Symfony\\Controller\\SongController::index')) }}
+{% endblock %}
